@@ -7,34 +7,36 @@ export default class UpdateDepartamento extends Component {
     cajaNombreRef = React.createRef();
     cajaLocalidadref = React.createRef();
     state = {
-        departamento:{},
-        status:false
+        departamento: {},
+        status: false,
+        statusGet: false
     }
     buscarDepartamento = () => {
         var id = this.props.id;
-        var request = "/api/departamentos/" +id;
+        var request = "/api/departamentos/" + id;
         var url = Global.urlDepartamentos + request;
-        axios.get(url).then(response =>{
+        axios.get(url).then(response => {
             this.setState({
-                departamento:response.data
+                departamento: response.data,
+                statusGet: true
             });
         });
     }
-    updateDepartamento = (e) =>{
+    updateDepartamento = (e) => {
         e.preventDefault();
         var num = parseInt(this.cajaNumeroRef.current.value);
         var nom = this.cajaNombreRef.current.value;
         var loc = this.cajaLocalidadref.current.value;
         var data = {
-            numero:num,
-            nombre:nom,
-            localidad:loc
+            numero: num,
+            nombre: nom,
+            localidad: loc
         };
         var request = "/api/departamentos";
-        var url = Global.urlDepartamentos +request;
-        axios.put(url,data).then(response =>{
+        var url = Global.urlDepartamentos + request;
+        axios.put(url, data).then(response => {
             this.setState({
-                status:true
+                status: true
             });
         });
     }
@@ -47,17 +49,21 @@ export default class UpdateDepartamento extends Component {
                 <h1> Update </h1>
                 {
                     this.state.status == true &&
-                    (<Navigate to="/"/>)
+                    (<Navigate to="/" />)
                 }
-                <form>
-                <input type="hidden" defaultValue={this.state.departamento.numero} ref={this.cajaNumeroRef}/>
-                <label>Nombre: </label>
-                <input type="text" className='form-control' defaultValue={this.state.departamento.nombre} ref={this.cajaNombreRef}/>
-                <label>Localidad: </label>
-                <input type="text" className='form-control' defaultValue={this.state.departamento.localidad} ref={this.cajaLocalidadref}/>
-                <button className='btn btn-info' onClick={this.updateDepartamento}>Modificar departamento</button>
+                {
+                    this.state.statusGet == true &&
+                    (<form>
+                        <input type="hidden" defaultValue={this.state.departamento.numero} ref={this.cajaNumeroRef} />
+                        <label>Nombre: </label>
+                        <input type="text" className='form-control' defaultValue={this.state.departamento.nombre} ref={this.cajaNombreRef} />
+                        <label>Localidad: </label>
+                        <input type="text" className='form-control' defaultValue={this.state.departamento.localidad} ref={this.cajaLocalidadref} />
+                        <button className='btn btn-info' onClick={this.updateDepartamento}>Modificar departamento</button>
 
-                </form>
+                    </form>)
+                }
+
             </div>
         )
     }
