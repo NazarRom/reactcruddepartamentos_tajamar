@@ -1,9 +1,27 @@
+import axios from 'axios';
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom';
+import Global from '../Global';
 export default class MenuDepartamentos extends Component {
+    state = {
+        departamentos:[],
+        status:false
+    }
+    loadDepartamentosMenu = () =>{
+        var request = "/api/departamentos";
+        var url = Global.urlDepartamentos + request;
+        axios.get(url).then(res => {
+            this.setState({
+                departamentos: res.data,
+                status:true
+            })
+        })
+    }
+    componentDidMount = () =>{
+        this.loadDepartamentosMenu();
+    }
     render() {
         return (
-
             <nav className="navbar navbar-expand-lg bg-light">
                 <div className="container-fluid">
                     <a className="navbar-brand" href="#">CRUD</a>
@@ -20,13 +38,14 @@ export default class MenuDepartamentos extends Component {
                             </li>
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Dropdown
+                                    Departamentos
                                 </a>
                                 <ul className="dropdown-menu">
-                                    <li><a className="dropdown-item" href="#">Action</a></li>
-                                    <li><a className="dropdown-item" href="#">Another action</a></li>
-                                    <li><hr className="dropdown-divider" /></li>
-                                    <li><a className="dropdown-item" href="#">Something else here</a></li>
+                                    {   this.state.status == true &&
+                                        this.state.departamentos.map((dep,index)=>{
+                                            return(<li key={dep.numero} className="dropdown-item"><NavLink to={"/empleado/" + dep.numero}>{dep.nombre}</NavLink></li>)
+                                        })
+                                    }
                                 </ul>
                             </li>
                             <li className="nav-item">
